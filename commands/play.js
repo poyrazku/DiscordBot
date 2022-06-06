@@ -1,24 +1,20 @@
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 
-//Global queue for your bot. Every server will have a key and value pair in this map. { guild.id, queue_constructor{} }
 const queue = new Map();
 
 module.exports = {
     name: 'play',
-    aliases: ['skip', 'stop','sie', 'dur', 'killyourself','geç','çal','playlive'], //We are using aliases to run the skip and stop command follow this tutorial if lost: https://www.youtube.com/watch?v=QBUJ3cdofqc
+    aliases: ['skip', 'stop','sie', 'dur', 'killyourself','geç','çal','playlive'], 
     description: 'Advanced music bot',
     async execute(message,args, cmd, client, Discord){
 
-
-        //Checking for the voicechannel and permissions (you can add more permissions if you like).
         const voice_channel = message.member.voice.channel;
         if (!voice_channel) return message.reply('Kanala gir öyle çağır n00b');
         const permissions = voice_channel.permissionsFor(message.client.user);
         if (!permissions.has('CONNECT')) return message.reply('İznin yok piç');
         if (!permissions.has('SPEAK')) return message.reply('İznin yok n00b');
 
-        //This is our server queue. We are getting this server queue from the global queue.
         const server_queue = queue.get(message.guild.id);
 
         const play_live = async (guild, song) => {
@@ -97,7 +93,6 @@ module.exports = {
                 }
             }
 
-            //If the server queue does not exist (which doesn't for the first video queued) then create a constructor to be added to our global queue.
             if (!server_queue){
 
                 const queue_constructor = {
@@ -107,7 +102,6 @@ module.exports = {
                     songs: []
                 }
                 
-                //Add our key and value pair into the global queue. We then use this to get our server queue.
                 queue.set(message.guild.id, queue_constructor);
                 queue_constructor.songs.push(song);
     
